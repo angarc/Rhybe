@@ -28,7 +28,7 @@ Ideally, you should set this as close as possible to the actual audio file. For 
 ## Usage
 
 ```
-python -m rhybe --input_filename=test1.wav --output_filename=output.mid --min_peak_distance 5000 --min_peak_height 10000 --num_measures=8 --subdivision=16 --tempo=60
+python -m rhybe
 ```
 
 * `min_peak_height`
@@ -51,6 +51,3 @@ Try to keep this number as low as possible. If you only hear 8th notes, then set
 
 Desired tempo of the output MIDI file in BPM
 
-* `input_filename` / `output_filename`
-
-Should be self explanatory, but remember that the input file is mono (.wav) and output file is (.mid)
