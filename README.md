@@ -1,3 +1,5 @@
+![screenshot of Rhybe UI](https://raw.githubusercontent.com/angarc/Rhybe/main/.github/images/rhybe_ui.png)
+
 # Rhybe
 
 i.e., A Rhythm Transcriber.
