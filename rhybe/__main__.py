@@ -1,9 +1,14 @@
 from .WAVFile import WAVFile
 from .RhythmExtractor import RhythmExtractor
 from .MIDIHelper import write_hit_partials_to_midi
+from .RhybeUI import RhybeUI
 import argparse
-
+import customtkinter 
+from tkinter import filedialog as fd
 import sys
+
+customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("dark-blue")
 
 def main():
   parser = argparse.ArgumentParser(description='Process some integers.')
@@ -18,13 +23,29 @@ def main():
 
   args = parser.parse_args()
 
-  wavfile = WAVFile(args.input_filename)
-  rhythm_extractor = RhythmExtractor(wavfile, args.min_peak_distance, args.min_peak_height, args.num_measures, args.subdivision)
+  ui = RhybeUI()
+  ui.start() 
 
-  if args.plot_only:
-    rhythm_extractor.plot_hits()
-  else:
-    write_hit_partials_to_midi(rhythm_extractor.get_hit_partials(), args.tempo, args.output_filename)
+def update_plot(min_peak_height, frame, rhythm_extractor):
+  rhythm_extractor.set_min_peak_height(int(min_peak_height))
+  rhythm_extractor.plot_hits(frame)
+
+
+def transcribe(args, filename_label, frame, rhythm_extractor):
+  filename = fd.askopenfilename()
+
+  filename_label.configure(text=f"file: {filename}")
+
+  wavfile = WAVFile(filename)
+  rhythm_extractor = RhythmExtractor(wavfile, args.min_peak_distance, args.min_peak_height, args.num_measures, args.subdivision)
+  rhythm_extractor.plot_hits(frame)
+
+  
+
+  # if args.plot_only:
+  #   rhythm_extractor.plot_hits()
+  # else:
+  #   write_hit_partials_to_midi(rhythm_extractor.get_hit_partials(), args.tempo, args.output_filename)
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -1,9 +1,6 @@
-import wave
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
-import sys
-from .WAVFile import WAVFile
+from matplotlib.figure import Figure 
 
 class RhythmExtractor:
   def __init__(self, wavfile, min_peak_distance, min_peak_height, num_measures, subdivision):
@@ -19,16 +16,33 @@ class RhythmExtractor:
 
       return hit_times
   
-
-  def plot_hits(self):
+  def get_plot_figure(self):
     hits, _ = find_peaks(self.wavfile.get_signal(), distance=self.min_peak_distance, height=self.min_peak_height)
     time = np.linspace(0, self.wavfile.get_num_total_frames() / self.wavfile.get_framerate(), num=self.wavfile.get_num_total_frames())
+    partials = np.linspace(0, self.wavfile.get_duration(), num=self.subdivision * self.num_measures)
+
+    fig = Figure(figsize = (5, 5), dpi = 100)
+    plot = fig.add_subplot(111)
 
     signal = self.wavfile.get_signal()
 
-    plt.plot(time, signal) 
-    plt.plot(time[hits], signal[hits], "x")
-    plt.show()
+    plot.plot(time, signal) 
+    plot.plot(time[hits], signal[hits], "x", color="red")
+    plot.plot(partials, [0] * len(partials), "o", color="yellow")
+
+    return fig
+
+  def set_min_peak_height(self, min_peak_height):
+    self.min_peak_height = min_peak_height
+
+  def set_min_peak_distance(self, min_peak_distance):
+    self.min_peak_distance = min_peak_distance
+
+  def set_num_measures(self, num_measures):
+    self.num_measures = num_measures
+
+  def set_subdivision(self, subdivision):
+    self.subdivision = subdivision
 
   ##
   # Returns the partials for which there was a hit. A partial is a single subdivision of a measure, or a beat.
